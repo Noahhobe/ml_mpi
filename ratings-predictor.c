@@ -3,6 +3,7 @@
 #include <math.h>
 
 
+/*struct for tying id and distance*/
 struct distance_metric {
   unsigned id;
   double distance;
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]){
 
 /*record the user reviews*/
  double * const userRevs = malloc(nMovies * sizeof(double));
- printf("Enter %u movie reviews as doubles\n", nMovies - 1);
+ printf("\nEnter %u movie reviews as doubles\n", nMovies - 1);
 
  for (i = 0; i < nMovies - 1; i++){ 
   printf("Movie #%u\n", i + 1);
@@ -56,29 +57,37 @@ int main(int argc, char *argv[]){
  
 /*compute and store the distances of the user and the viewers*/
  struct distance_metric * const distances = malloc(nMovies * nViewers * (sizeof(struct distance_metric)));
+ printf("\n\nViewer ID     Movie %u     Distance\n", nMovies);
+ printf("-------------------------------------\n");
  for (i = 0; i < nViewers; i++){
  double sum = 0.0;
- printf("\nViewer ID    Distance\n");
- printf("-----------------------\n");
- printf("      %u\n", i);
   for (j = 0; j < nMovies - 1; j++){
-   sum =  sum + fabs(userRevs[j] - revs[i + j]);
-   printf("              %lf\n", fabs(userRevs[j] - revs[i + j]));
+   sum =  sum + fabs(userRevs[j] - revs[j + (nMovies * i)]);
   }
+  printf("        %u     %lf    %lf\n", i, revs[(i + 1) * nMovies], sum);
   distances[i].distance = sum;
   distances[i].id = i;
  }
-
+ printf("\n");
 
 /*sort the distances and find the k minimum distances*/
-
+ unsigned k;
+ double prediction;
+ double sum = 0.0;
  qsort((void*)distances, nViewers, sizeof(struct  distance_metric), sortLess);
- for (j = 0; j < nViewers; j++){
-  printf("\n%u %lf", distances[j].id, distances[j].distance);
+ printf("Enter the number of closest viewers to calculate the prediction\n");
+ printf("The number must be %u or less\n", nViewers);
+ scanf("%u", &k);
+ for (j = 0; j < k; j++){
+  printf("%u %lf\n", distances[j].id, distances[j].distance);
+  sum += revs[((distances[j].id + 1) * nMovies) - 1];
 }
-
+ prediction = sum / k;
  printf("\nThe most similar viewer was viewer #%u and the distance calculated was %lf\n", distances[0].id, distances[0].distance);
- printf("The predicated rating for movie #%u is %lf.", nMovies, revs[distances[0].id + nMovies - 1]);
+ printf("That viewers rating for movie #%u was %lf\n", nMovies, 
+revs[((distances[0].id + 1) * nMovies) - 1]);
+ printf("The predicated rating for movie #%u is %lf.", nMovies, prediction);
+
 
  printf("\n");
  free(revs);
