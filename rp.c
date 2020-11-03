@@ -91,8 +91,8 @@ main(int argc, char * argv[])
   for (unsigned k = 0; k < 10; k++) {
     for (size_t i = 0; i < n; i++) {
       prob[k] += (rating[i * m + 4] == (k + 1) / 2.0);
-      clone[k] =  prob[k];
     }
+    clone[k] =  prob[k];
   }
  
   /* Finalize computation of probabilities. */
@@ -110,7 +110,7 @@ main(int argc, char * argv[])
     for (size_t j = 0; j < m - 1; j++){
       for (unsigned k = 0; k < 10; k++){
         if (urating[j] == rating[(i * m) + j] && rating[(i * m) + (m - 1)] == (k + 1) / 2.0){
-          counter[(j * 10) + k]++;
+          counter[j * 10 + k]++;
         }   
       }
     }
@@ -122,7 +122,7 @@ main(int argc, char * argv[])
  for (unsigned k = 0; k < 10; k++){
    if (prob[k] != 0){
      probabilities[k] = prob[k] * (counter[k] / clone[k]) * (counter[k + 10] / clone[k]) * (counter[k + 20] / clone[k]) * (counter[k + 30] / clone[k]); 
-     printf("%lf", prob[k]);
+     //printf("%lf", prob[k]);
    }
    else{
      probabilities[k] = 0.0; 
@@ -133,10 +133,12 @@ main(int argc, char * argv[])
  double max = 0.0;
  double highestProb = 0.0;
  unsigned index = 0;
+ unsigned unchanged = 0;
  for (unsigned k = 0; k < 10; k++){
    if(probabilities[k] > max){
      max = probabilities[k];
      index = k;	
+     unchanged = 1;
    }
  }
  highestProb = (index + 1) / 2.0;
@@ -147,11 +149,22 @@ main(int argc, char * argv[])
  */
 
   /* Output prediction. */
-  printf("The predicted rating for movie five is %.1lf.\n", highestProb);
-
+  if (unchanged == 1){
+    printf("\nThe predicted rating for movie five is %.1lf.\n", highestProb);
+  }
+  else{
+    double avg = 0;
+    for (unsigned i = 0; i < m - 1; i++){
+      avg += urating[i]; //(urating[i] < (m - 1)) ? urating[i] : 0;
+}   
+  avg /= m - 1;
+  printf("\nThe predicted rating for movie five is %.1lf.\n", avg);
+  }
   /* Deallocate memory. */
   free(rating);
   free(urating);
+  //free(counter);
+  //free(probabilities);
 
   return EXIT_SUCCESS;
 }
