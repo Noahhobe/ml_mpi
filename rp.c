@@ -84,9 +84,8 @@ main(int argc, char * argv[])
   }
 
   /* Allocate more memory. */
-  double prob[10] = {0.0};
-  double clone[10] = {0.0};
-
+  double * const prob = malloc(10 * sizeof(*prob));
+  double * const clone = malloc(10 * sizeof(*prob));
   /* Compute probabilities. */
   for (unsigned k = 0; k < 10; k++) {
     for (size_t i = 0; i < n; i++) {
@@ -102,7 +101,6 @@ main(int argc, char * argv[])
 
   /* Allocate memory for a conditional probability counter. */
   double * const counter = malloc((m - 1) * 10 * sizeof(*counter));
-  //double counter[40] = {0.0};
  
   /* Loop through each user, and each of the first m-1 movies, and the 10 possible ratings
      to populate an array of probabilities*/
@@ -118,11 +116,10 @@ main(int argc, char * argv[])
 
  /* Computes probabilities. */
  double * const probabilities = malloc((m - 1) * 10 * sizeof(*probabilities));
- //double probabilities[40] = {0.0};
+
  for (unsigned k = 0; k < 10; k++){
    if (prob[k] != 0){
      probabilities[k] = prob[k] * (counter[k] / clone[k]) * (counter[k + 10] / clone[k]) * (counter[k + 20] / clone[k]) * (counter[k + 30] / clone[k]); 
-     //printf("%lf", prob[k]);
    }
    else{
      probabilities[k] = 0.0; 
@@ -143,11 +140,6 @@ main(int argc, char * argv[])
  }
  highestProb = (index + 1) / 2.0;
 
- /* for (int k = 0; k < 10; k++) {
-    printf("prob[%d] = %lf\n", k, prob[k]);
-  } 
- */
-
   /* Output prediction. */
   if (unchanged == 1){
     printf("\nThe predicted rating for movie five is %.1lf.\n", highestProb);
@@ -155,10 +147,10 @@ main(int argc, char * argv[])
   else{
     double avg = 0;
     for (unsigned i = 0; i < m - 1; i++){
-      avg += urating[i]; //(urating[i] < (m - 1)) ? urating[i] : 0;
-}   
-  avg /= m - 1;
-  printf("\nThe predicted rating for movie five is %.1lf.\n", avg);
+      avg += (urating[i] < 5) ? urating[i] : (urating[i] <=  0.5) ? 0.5 : 5;
+    }   
+    avg /= m - 1;
+    printf("\nThe predicted rating for movie five is %.1lf.\n", avg);
   }
 
   /* Deallocate memory. */
