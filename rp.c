@@ -101,8 +101,8 @@ main(int argc, char * argv[])
   }
 
   /* Allocate memory for a conditional probability counter. */
-  //double * const counter = ((m - 1) * 10 * sizeof(*counter));
-  double counter[40] = {0.0};
+  double * const counter = malloc((m - 1) * 10 * sizeof(*counter));
+  //double counter[40] = {0.0};
  
   /* Loop through each user, and each of the first m-1 movies, and the 10 possible ratings
      to populate an array of probabilities*/
@@ -117,8 +117,8 @@ main(int argc, char * argv[])
   }
 
  /* Computes probabilities. */
- //double * const probabilities = ((m - 1) * 10 * sizeof(*probabilities));
- double probabilities[40] = {0.0};
+ double * const probabilities = malloc((m - 1) * 10 * sizeof(*probabilities));
+ //double probabilities[40] = {0.0};
  for (unsigned k = 0; k < 10; k++){
    if (prob[k] != 0){
      probabilities[k] = prob[k] * (counter[k] / clone[k]) * (counter[k + 10] / clone[k]) * (counter[k + 20] / clone[k]) * (counter[k + 30] / clone[k]); 
@@ -160,11 +160,12 @@ main(int argc, char * argv[])
   avg /= m - 1;
   printf("\nThe predicted rating for movie five is %.1lf.\n", avg);
   }
+
   /* Deallocate memory. */
   free(rating);
   free(urating);
-  //free(counter);
-  //free(probabilities);
+  free(counter);
+  free(probabilities);
 
   return EXIT_SUCCESS;
 }
