@@ -61,8 +61,9 @@ main(int argc, char * argv[])
   /* Check for success. */
   assert(rating);
 
-  for (size_t i = 0; i < n; i++) {
-    for (size_t j = 0; j < m; j++) {
+  /*  Load the ratings in from the database / text document. */
+  for (unsigned i = 0; i < n; i++) {
+    for (unsigned j = 0; j < m; j++) {
       fscanf(fp, "%lf", &rating[i * m + j]);
     }
   }
@@ -78,7 +79,7 @@ main(int argc, char * argv[])
   assert(urating);
 
   /* Get user input. */
-  for (size_t j = 0; j < m - 1; j++) {
+  for (unsigned j = 0; j < m - 1; j++) {
     printf("Enter your rating for movie %zu: ", j + 1);
     scanf("%lf", &urating[j]);
   }
@@ -88,7 +89,7 @@ main(int argc, char * argv[])
   double * const clone = malloc(10 * sizeof(*prob));
   /* Compute probabilities. */
   for (unsigned k = 0; k < 10; k++) {
-    for (size_t i = 0; i < n; i++) {
+    for (unsigned i = 0; i < n; i++) {
       prob[k] += (rating[i * m + 4] == (k + 1) / 2.0);
     }
     clone[k] =  prob[k];
@@ -104,8 +105,8 @@ main(int argc, char * argv[])
  
   /* Loop through each user, and each of the first m-1 movies, and the 10 possible ratings
      to populate an array of probabilities*/
-  for (size_t i = 0; i < n; i++){
-    for (size_t j = 0; j < m - 1; j++){
+  for (unsigned i = 0; i < n; i++){
+    for (unsigned j = 0; j < m - 1; j++){
       for (unsigned k = 0; k < 10; k++){
         if (urating[j] == rating[(i * m) + j] && rating[(i * m) + (m - 1)] == (k + 1) / 2.0){
           counter[j * 10 + k]++;
@@ -145,7 +146,7 @@ main(int argc, char * argv[])
     printf("\nThe predicted rating for movie five is %.1lf.\n", highestProb);
   }
   else{
-    double avg = 0;
+    double avg = 0.0;
     for (unsigned i = 0; i < m - 1; i++){
       avg += (urating[i] < 5) ? urating[i] : (urating[i] <=  0.5) ? 0.5 : 5;
     }   
