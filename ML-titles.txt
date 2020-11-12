@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 1 Forrest Gump (1994)
 2 "Shawshank Redemption the (1994)"
 3 Pulp Fiction (1994)
 4 "Silence of the Lambs The (1991)"
 5 "Matrix The (1999)"
+=======
+1 Forrest Gump (1994) 
+2 "Shawshank Redemption The (1994)" 
+3 Pulp Fiction (1994) 
+4 "Silence of the Lambs The (1991)" 
+5 "Matrix The (1999)" 
+>>>>>>> 54146e54b736f49e41adca82d8831408c8ff1dee
